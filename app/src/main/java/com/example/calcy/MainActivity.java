@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -81,18 +82,23 @@ public class MainActivity extends AppCompatActivity {
         });
         buttonEquals.setOnClickListener(v -> {
             try {
-                Animation anim = AnimationUtils.loadAnimation(this,R.anim.anim1);
-                anim.setDuration(500);
-                screen.startAnimation(anim);
                 String lastExpression = screen.getText().toString();
                 Expression expression = new ExpressionBuilder(lastExpression).build();
                 double result = expression.evaluate();
-                Animation animation = new AlphaAnimation(0.0f, 1.0f);
-                animation.setDuration(500);
-                previousResult.setText(lastExpression + " = " );
-                previousResult.startAnimation(animation);
-                screen.setText(String.valueOf(result));
-                screen.setSelection(screen.getText().length());
+                if (String.valueOf(result) != lastExpression) {
+                    Animation animation = new AlphaAnimation(0.0f, 1.0f);
+                    animation.setDuration(500);
+                    previousResult.setText(lastExpression + " = ");
+                    previousResult.startAnimation(animation);
+                    Animation anim = AnimationUtils.loadAnimation(this, R.anim.anim1);
+                    anim.setDuration(500);
+                    screen.startAnimation(anim);
+                    screen.setText(String.valueOf(result));
+                    screen.setSelection(screen.getText().length());
+                }
+                else {
+                    Toast.makeText(this, "Please enter a valid input", Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e){
 
             }
